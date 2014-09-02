@@ -1,8 +1,7 @@
 package net.shchastnyi.serializer;
 
-import net.shchastnyi.serializer.messages.Employee;
-import org.junit.Assert;
-import org.junit.Test;
+import net.shchastnyi.serializer.messages.Person;
+import org.junit.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,23 +10,25 @@ import java.nio.file.Files;
 
 public class AppTest {
 
-    private final String fileName = "d:/tmp/serial.ser";
+    private static final String TMP_DIR = "d:/tmp";
 
     @Test
-    public void testAssertEquals() throws Exception {
+    public void simpleBeanWithPublicFields() throws Exception {
+        String simpleFile = TMP_DIR +"/serial.ser";
+
         //Writing message
-        Employee outputMessage = new Employee("John", "Smith");
-        byte[] outputBytes = LightSerializerWriter.serialize(outputMessage);
-        OutputStream os = new FileOutputStream(fileName);
-        os.write(outputBytes);
+        Person messageSent = new Person("John", "Smith");
+        byte[] bytesSent = LightSerializerWriter.serialize(messageSent);
+        OutputStream os = new FileOutputStream(simpleFile);
+        os.write(bytesSent);
         os.flush();
         os.close();
 
         //Reading message
-        byte[] inputBytes = Files.readAllBytes(new File(fileName).toPath());
-        Employee inputMessage = LightSerializerReader.deSerialize(inputBytes);
+        byte[] bytesReceived = Files.readAllBytes(new File(simpleFile).toPath());
+        Person messageReceived = LightSerializerReader.deSerialize(bytesReceived);
 
-        Assert.assertSame("failure - objects are not equal", outputMessage, inputMessage);
+        Assert.assertEquals("Failure - objects are not equal", messageSent, messageReceived);
     }
 
     //TODO Inherited fields
@@ -41,6 +42,21 @@ public class AppTest {
 
     //TODO string encoding
     //TODO switch for primitives|arrays|enums|all_other_objects
+
+    @BeforeClass
+    public static void prepare() {
+        File dir = new File(TMP_DIR);
+        dir.mkdir();
+    }
+
+    @AfterClass
+    public static void clean() {
+        File dir = new File(TMP_DIR);
+        for (File file : dir.listFiles()) {
+            file.delete();
+        }
+        dir.delete();
+    }
 
 
 }

@@ -1,5 +1,6 @@
 package net.shchastnyi.serializer.utils;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +29,15 @@ public class LightSerializerUtils {
         List<Byte> result = new ArrayList<>();
         for (byte b : array) result.add(b);
         return result;
+    }
+
+    public static List<Byte> stringBytes(String str) {
+        return byteArrayToList(str.getBytes());
+    }
+
+    public static List<Byte> lenght(List<Byte> list) {
+        byte[] lengthInfo = ByteBuffer.allocate(4).putInt(list.size()).array();
+        return byteArrayToList(lengthInfo);
     }
 
 }
