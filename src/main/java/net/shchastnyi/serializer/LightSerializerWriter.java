@@ -23,11 +23,11 @@ import static net.shchastnyi.serializer.utils.LightSerializerUtils.*;
  */
 public class LightSerializerWriter
 {
-    public static byte[] serialize(Object message) throws Exception {
+    public static byte[] serialize(Object message) throws IllegalAccessException {
         return serializeObject(message);
     }
 
-    private static byte[] serializeObject(Object message) throws Exception {
+    private static byte[] serializeObject(Object message) throws IllegalAccessException {
         Class<?> messageClass = message.getClass();
         String canonicalName = messageClass.getCanonicalName();
 
