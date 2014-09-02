@@ -1,9 +1,5 @@
 package net.shchastnyi.serializer;
 
-import net.shchastnyi.serializer.messages.Employee;
-
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -69,12 +65,4 @@ public class LightSerializer
     }
     //!Objects
 
-    public static void main( String[] args ) throws Exception {
-        Object obj = new Employee("John", "Smith");
-        byte[] bytes = LightSerializer.serialize(obj);
-        OutputStream os = new FileOutputStream("d:/tmp/serial.ser");
-        os.write(bytes);
-        os.flush();
-        os.close();
-    }
 }
