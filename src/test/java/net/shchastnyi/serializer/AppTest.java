@@ -42,7 +42,8 @@ public class AppTest
     //TODO BigEndian/LittleEndian
 
     //TODO default values
-    //TODO recreate objects (constructors, setters)
+    //TODO recreate objects (constructors, setters) - check for default constructor
+    //TODO multiple objects at a file
 
     //TODO string encoding
     //TODO switch for primitives|arrays|enums|all_other_objects

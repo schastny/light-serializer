@@ -6,8 +6,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static net.shchastnyi.serializer.LightSerializerConstants.*;
+import static net.shchastnyi.serializer.utils.LightSerializerUtils.*;
 
-public class LightSerializer
+/**
+ * <pre>
+ * CLASS_START
+ * XXXXXX
+ * CLASS_DELIMITER
+ *  FIELD_START
+ *  YYYYYYY
+ *  FIELD_DATA_LENGTH
+ *  1234
+ *  DATA
+ * CLASS_END
+ * <pre/>
+ */
+public class LightSerializerWriter
 {
     public static byte[] serialize(Object message) throws Exception {
         return serializeObject(message);
@@ -19,50 +33,32 @@ public class LightSerializer
 
         List<Byte> result = new ArrayList<>();
         result.add(CLASS_START);
-        result.add(CLASS_NAME_START);
-        for ( byte b : canonicalName.getBytes() ) {
-            result.add(b);
-        }
-        result.add(CLASS_NAME_END);
+        result.addAll(byteArrayToList(canonicalName.getBytes()));
+        result.add(CLASS_DELIMITER);
 
         Field[] declaredFields = messageClass.getDeclaredFields();
         for (Field field : declaredFields) {
             result.add(FIELD_START);
-            List<Byte> fieldBytes = new ArrayList<>();
+            result.addAll(
+                    byteArrayToList(field.getName().getBytes())
+            );
+            result.add(FIELD_DELIMITER);
+
+            List<Byte> fieldData = new ArrayList<>();
             switch (field.getType().getCanonicalName()) {
                 case "java.lang.String":
                     String fieldValue = (String) field.get(message); //TODO catch private fields access exception
-                    fieldBytes.addAll(
-                            byteArrayToList(fieldValue.getBytes())
-                    );
+                    fieldData.addAll(byteArrayToList(fieldValue.getBytes()));
                     break;
             }
-            result.add(FIELD_DATA_LENGTH);
-            byte[] lengthInfo = ByteBuffer.allocate(4).putInt(fieldBytes.size()).array();
+            byte[] lengthInfo = ByteBuffer.allocate(4).putInt(fieldData.size()).array();
             result.addAll(byteArrayToList(lengthInfo));
-            result.addAll(fieldBytes);
-            result.add(FIELD_END);
+            result.addAll(fieldData);
         }
 
         result.add(CLASS_END);
 
         return byteListToArray(result);
     }
-
-    private static byte[] byteListToArray(List<Byte> list) {
-        byte[] result = new byte[list.size()];
-        for(int i = 0; i < list.size(); i++) result[i] = list.get(i);
-        return result;
-    }
-    private static List<Byte> byteArrayToList(byte[] array) {
-        List<Byte> result = new ArrayList<>();
-        for (byte b : array) result.add(b);
-        return result;
-    }
-
-    public static <T> T fromBytes(T clazz) {
-        return null;
-    }
-    //!Objects
 
 }
