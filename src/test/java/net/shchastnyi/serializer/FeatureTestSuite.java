@@ -1,7 +1,5 @@
-package net.shchastnyi.serializer.messages;
+package net.shchastnyi.serializer;
 
-import net.shchastnyi.serializer.AppTest;
-import net.shchastnyi.serializer.UtilsTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
