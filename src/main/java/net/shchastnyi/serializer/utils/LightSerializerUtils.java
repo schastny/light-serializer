@@ -61,15 +61,31 @@ public class LightSerializerUtils {
         Object result = fieldBytes;
         switch (fieldType) {
             case TYPE_STRING: result = bytesToString(fieldBytes); break;
-            case TYPE_BYTE: result = bytesToByte(fieldBytes); break;
-            case TYPE_SHORT: result = bytesToShort(fieldBytes); break;
-            case TYPE_INTEGER: result = bytesToInteger(fieldBytes); break;
-            case "int": result = bytesToInteger(fieldBytes); break;
-            case TYPE_LONG: result = bytesToLong(fieldBytes); break;
-            case TYPE_FLOAT: result = bytesToFloat(fieldBytes); break;
-            case TYPE_DOUBLE: result = bytesToDouble(fieldBytes); break;
+
+            case TYPE_BYTE:     result = bytesToByte(fieldBytes); break;
+            case TYPE_BYTE_P:   result = bytesToByte(fieldBytes); break;
+
+            case TYPE_SHORT:    result = bytesToShort(fieldBytes); break;
+            case TYPE_SHORT_P:  result = bytesToShort(fieldBytes); break;
+
+            case TYPE_INTEGER:  result = bytesToInteger(fieldBytes); break;
+            case TYPE_INT_P:    result = bytesToInteger(fieldBytes); break;
+
+            case TYPE_LONG:     result = bytesToLong(fieldBytes); break;
+            case TYPE_LONG_P:   result = bytesToLong(fieldBytes); break;
+
+            case TYPE_FLOAT:    result = bytesToFloat(fieldBytes); break;
+            case TYPE_FLOAT_P:  result = bytesToFloat(fieldBytes); break;
+
+            case TYPE_DOUBLE:   result = bytesToDouble(fieldBytes); break;
+            case TYPE_DOUBLE_P: result = bytesToDouble(fieldBytes); break;
+
             case TYPE_BOOLEAN: result = bytesToBoolean(fieldBytes); break;
+            case TYPE_BOOLEAN_P: result = bytesToBoolean(fieldBytes); break;
+
             case TYPE_CHARACTER: result = bytesToCharacter(fieldBytes); break;
+            case TYPE_CHAR_P: result = bytesToCharacter(fieldBytes); break;
+
             default: throw new RuntimeException("Can't get wrapper for type: "+fieldType);
         }
         return result;
@@ -117,15 +133,31 @@ public class LightSerializerUtils {
         List<Byte> fieldBytes = new ArrayList<>();
         switch (field.getType().getCanonicalName()) {
             case TYPE_STRING: fieldBytes.addAll(stringToBytes(message, field)); break;
-            case TYPE_BYTE: fieldBytes.addAll(byteToBytes(message, field)); break;
-            case TYPE_SHORT: fieldBytes.addAll(shortToBytes(message, field)); break;
-            case TYPE_INTEGER: fieldBytes.addAll(integerToBytes(message, field)); break;
-            case "int": fieldBytes.addAll(integerToBytes(message, field)); break;
-            case TYPE_LONG: fieldBytes.addAll(longToBytes(message, field)); break;
-            case TYPE_FLOAT: fieldBytes.addAll(floatToBytes(message, field)); break;
-            case TYPE_DOUBLE: fieldBytes.addAll(doubleToBytes(message, field)); break;
-            case TYPE_BOOLEAN: fieldBytes.addAll(booleanToBytes(message, field)); break;
-            case TYPE_CHARACTER: fieldBytes.addAll(characterToBytes(message, field)); break;
+
+            case TYPE_BYTE:     fieldBytes.addAll(byteToBytes(message, field)); break;
+            case TYPE_BYTE_P:   fieldBytes.addAll(byteToBytes(message, field)); break;
+
+            case TYPE_SHORT:    fieldBytes.addAll(shortToBytes(message, field)); break;
+            case TYPE_SHORT_P:  fieldBytes.addAll(shortToBytes(message, field)); break;
+
+            case TYPE_INTEGER:  fieldBytes.addAll(integerToBytes(message, field)); break;
+            case TYPE_INT_P:    fieldBytes.addAll(integerToBytes(message, field)); break;
+
+            case TYPE_LONG:     fieldBytes.addAll(longToBytes(message, field)); break;
+            case TYPE_LONG_P:   fieldBytes.addAll(longToBytes(message, field)); break;
+
+            case TYPE_FLOAT:    fieldBytes.addAll(floatToBytes(message, field)); break;
+            case TYPE_FLOAT_P:  fieldBytes.addAll(floatToBytes(message, field)); break;
+
+            case TYPE_DOUBLE:   fieldBytes.addAll(doubleToBytes(message, field)); break;
+            case TYPE_DOUBLE_P: fieldBytes.addAll(doubleToBytes(message, field)); break;
+
+            case TYPE_BOOLEAN:  fieldBytes.addAll(booleanToBytes(message, field)); break;
+            case TYPE_BOOLEAN_P:fieldBytes.addAll(booleanToBytes(message, field)); break;
+
+            case TYPE_CHARACTER:fieldBytes.addAll(characterToBytes(message, field)); break;
+            case TYPE_CHAR_P:   fieldBytes.addAll(characterToBytes(message, field)); break;
+
             default: throw new RuntimeException("Can't get wrapper for type: "+field.getType());
         }
         return fieldBytes;
