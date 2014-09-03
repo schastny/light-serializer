@@ -64,11 +64,13 @@ public class LightSerializerUtils {
             case TYPE_BYTE: result = bytesToByte(fieldBytes); break;
             case TYPE_SHORT: result = bytesToShort(fieldBytes); break;
             case TYPE_INTEGER: result = bytesToInteger(fieldBytes); break;
+            case "int": result = bytesToInteger(fieldBytes); break;
             case TYPE_LONG: result = bytesToLong(fieldBytes); break;
             case TYPE_FLOAT: result = bytesToFloat(fieldBytes); break;
             case TYPE_DOUBLE: result = bytesToDouble(fieldBytes); break;
             case TYPE_BOOLEAN: result = bytesToBoolean(fieldBytes); break;
             case TYPE_CHARACTER: result = bytesToCharacter(fieldBytes); break;
+            default: throw new RuntimeException("Can't get wrapper for type: "+fieldType);
         }
         return result;
     }
@@ -118,11 +120,13 @@ public class LightSerializerUtils {
             case TYPE_BYTE: fieldBytes.addAll(byteToBytes(message, field)); break;
             case TYPE_SHORT: fieldBytes.addAll(shortToBytes(message, field)); break;
             case TYPE_INTEGER: fieldBytes.addAll(integerToBytes(message, field)); break;
+            case "int": fieldBytes.addAll(integerToBytes(message, field)); break;
             case TYPE_LONG: fieldBytes.addAll(longToBytes(message, field)); break;
             case TYPE_FLOAT: fieldBytes.addAll(floatToBytes(message, field)); break;
             case TYPE_DOUBLE: fieldBytes.addAll(doubleToBytes(message, field)); break;
             case TYPE_BOOLEAN: fieldBytes.addAll(booleanToBytes(message, field)); break;
             case TYPE_CHARACTER: fieldBytes.addAll(characterToBytes(message, field)); break;
+            default: throw new RuntimeException("Can't get wrapper for type: "+field.getType());
         }
         return fieldBytes;
     }

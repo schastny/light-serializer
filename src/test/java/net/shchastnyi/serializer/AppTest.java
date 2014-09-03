@@ -1,7 +1,7 @@
 package net.shchastnyi.serializer;
 
+import net.shchastnyi.serializer.messages.AllWrappersInOne;
 import net.shchastnyi.serializer.messages.Person;
-import net.shchastnyi.serializer.messages.PersonWithAge;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -26,13 +26,13 @@ public class AppTest {
     }
 
     @Test
-    public void testAge() throws Exception {
+    public void wrappersTest() throws Exception {
         //Writing message
-        PersonWithAge messageSent = new PersonWithAge("John", "Smith", 42);
+        AllWrappersInOne messageSent = new AllWrappersInOne("John", "Smith", 42, 80);
         byte[] bytesSent = LightSerializerWriter.serialize(messageSent);
 
         //Reading message
-        PersonWithAge messageReceived = LightSerializerReader.deSerialize(bytesSent);
+        AllWrappersInOne messageReceived = LightSerializerReader.deSerialize(bytesSent);
 
         Assert.assertEquals("Failure - objects are not equal", messageSent, messageReceived);
     }
