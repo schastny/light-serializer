@@ -24,19 +24,31 @@ public class LightSerializerReader {
 
         // Read fiedls
         Map<String, Object> fields = new HashMap<>();
+        Map<String, Object> fieldTypes = new HashMap<>();
         Byte b = bytesSequence.poll(); //CLASS end or something else
         while (b != CLASS_END) {
             String fieldName = getMetaString(bytesSequence, FIELD_DELIMITER);
             String fieldType = getMetaString(bytesSequence, FIELD_DELIMITER);
             byte[] fieldBytes = byteListToArray(getFieldData(bytesSequence));
-            String fieldValue = new String(fieldBytes);
+            Object fieldValue = bytesToValue(fieldBytes, fieldType);
+
             fields.put(fieldName, fieldValue);
+            fieldTypes.put(fieldName, fieldType);
+
             b = bytesSequence.poll(); //CLASS_END or FIELD_START
         }
         // !Read fiedls
 
-        T s = constructObject(messageType, fields);
+        T s = constructObject(messageType, fields, fieldTypes);
         return s;
+    }
+
+    private static Object bytesToValue(byte[] fieldBytes, String fieldType) {
+        Object result = fieldBytes;
+        switch (fieldType) {
+            case TYPE_STRING: result = new String(fieldBytes);
+        }
+        return result;
     }
 
     private static List<Byte> getFieldData(ArrayDeque<Byte> bytesSequence) {
@@ -61,7 +73,8 @@ public class LightSerializerReader {
         return new String(byteListToArray(typeBytes));
     }
 
-    private static <T> T constructObject(String messageTypeString, Map<String, Object> fields)
+    @SuppressWarnings("unchecked")
+    private static <T> T constructObject(String messageTypeString, Map<String, Object> fields, Map<String, Object> fieldTypes)
             throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, InstantiationException {
         Class<?> clazz = Class.forName(messageTypeString);
         T s = (T) clazz.newInstance();

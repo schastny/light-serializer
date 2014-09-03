@@ -50,7 +50,7 @@ public class LightSerializerWriter {
 
         List<Byte> fieldBytes = new ArrayList<>();
         switch (field.getType().getCanonicalName()) {
-            case "java.lang.String": fieldBytes.addAll(getBytesFromString(message, field)); break;
+            case TYPE_STRING: fieldBytes.addAll(getBytesFromString(message, field)); break;
 //            case "java.lang.Integer": fieldBytes.addAll(getBytesFromInteger(message, field)); break;
         }
         result.addAll(lenght(fieldBytes));
