@@ -120,7 +120,7 @@ public class LightSerializerUtils {
     }
 
     public static Boolean bytesToBoolean(byte[] fieldBytes) {
-        return ByteBuffer.wrap(fieldBytes).order(ByteOrder.BIG_ENDIAN).getShort() != 0;
+        return ByteBuffer.wrap(fieldBytes).order(ByteOrder.BIG_ENDIAN).get() != 0;
     }
 
     public static Character bytesToCharacter(byte[] fieldBytes) {

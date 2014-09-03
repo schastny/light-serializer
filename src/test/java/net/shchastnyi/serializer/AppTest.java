@@ -28,7 +28,9 @@ public class AppTest {
     @Test
     public void wrappersTest() throws Exception {
         //Writing message
-        AllWrappersInOne messageSent = new AllWrappersInOne("John", "Smith", 42, 80);
+        AllWrappersInOne messageSent = new AllWrappersInOne(
+                (byte)1, (short)2, 3, 4,
+                12f, 13d, 'c', true);
         byte[] bytesSent = LightSerializerWriter.serialize(messageSent);
 
         //Reading message
