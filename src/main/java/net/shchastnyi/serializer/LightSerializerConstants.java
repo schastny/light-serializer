@@ -11,5 +11,6 @@ public class LightSerializerConstants {
 
     //Constants
     public static final String TYPE_STRING = "java.lang.String";
+    public static final String TYPE_INTEGER = "java.lang.Integer";
 
 }

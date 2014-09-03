@@ -19,14 +19,14 @@ public class AppTest {
         //Writing message
         Person messageSent = new Person("John", "Smith");
         byte[] bytesSent = LightSerializerWriter.serialize(messageSent);
-        OutputStream os = new FileOutputStream(simpleFile);
-        os.write(bytesSent);
-        os.flush();
-        os.close();
+//        OutputStream os = new FileOutputStream(simpleFile);
+//        os.write(bytesSent);
+//        os.flush();
+//        os.close();
 
         //Reading message
-        byte[] bytesReceived = Files.readAllBytes(new File(simpleFile).toPath());
-        Person messageReceived = LightSerializerReader.deSerialize(bytesReceived);
+//        byte[] bytesReceived = Files.readAllBytes(new File(simpleFile).toPath());
+        Person messageReceived = LightSerializerReader.deSerialize(bytesSent);
 
         Assert.assertEquals("Failure - objects are not equal", messageSent, messageReceived);
     }
@@ -35,6 +35,7 @@ public class AppTest {
     //TODO private fields without getters
     //TODO transient mark
     //TODO BigEndian/LittleEndian
+    //TODO cyclic references
 
     //TODO default values
     //TODO recreate objects (constructors, setters) - check for default constructor
@@ -57,6 +58,5 @@ public class AppTest {
         }
         dir.delete();
     }
-
 
 }

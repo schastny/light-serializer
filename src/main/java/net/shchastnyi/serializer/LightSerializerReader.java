@@ -7,8 +7,7 @@ import java.nio.ByteOrder;
 import java.util.*;
 
 import static net.shchastnyi.serializer.LightSerializerConstants.*;
-import static net.shchastnyi.serializer.utils.LightSerializerUtils.byteArrayToList;
-import static net.shchastnyi.serializer.utils.LightSerializerUtils.byteListToArray;
+import static net.shchastnyi.serializer.utils.LightSerializerUtils.*;
 
 public class LightSerializerReader {
 
@@ -29,8 +28,8 @@ public class LightSerializerReader {
         while (b != CLASS_END) {
             String fieldName = getMetaString(bytesSequence, FIELD_DELIMITER);
             String fieldType = getMetaString(bytesSequence, FIELD_DELIMITER);
-            byte[] fieldBytes = byteListToArray(getFieldData(bytesSequence));
-            Object fieldValue = bytesToValue(fieldBytes, fieldType);
+            byte[] fieldBytes = byteListToArray(getFieldBytes(bytesSequence));
+            Object fieldValue = bytesToObject(fieldBytes, fieldType);
 
             fields.put(fieldName, fieldValue);
             fieldTypes.put(fieldName, fieldType);
@@ -43,15 +42,7 @@ public class LightSerializerReader {
         return s;
     }
 
-    private static Object bytesToValue(byte[] fieldBytes, String fieldType) {
-        Object result = fieldBytes;
-        switch (fieldType) {
-            case TYPE_STRING: result = new String(fieldBytes);
-        }
-        return result;
-    }
-
-    private static List<Byte> getFieldData(ArrayDeque<Byte> bytesSequence) {
+    private static List<Byte> getFieldBytes(ArrayDeque<Byte> bytesSequence) {
         int lenght = ByteBuffer
                 .wrap(new byte[]{bytesSequence.poll(), bytesSequence.poll(), bytesSequence.poll(), bytesSequence.poll()})
                 .order(ByteOrder.BIG_ENDIAN)

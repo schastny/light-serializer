@@ -45,30 +45,15 @@ public class LightSerializerWriter {
         result.add(FIELD_START);
         result.addAll(stringBytes(field.getName()));
         result.add(FIELD_DELIMITER);
+
         result.addAll(stringBytes(field.getType().getCanonicalName()));
         result.add(FIELD_DELIMITER);
 
-        List<Byte> fieldBytes = new ArrayList<>();
-        switch (field.getType().getCanonicalName()) {
-            case TYPE_STRING: fieldBytes.addAll(getBytesFromString(message, field)); break;
-//            case "java.lang.Integer": fieldBytes.addAll(getBytesFromInteger(message, field)); break;
-        }
-        result.addAll(lenght(fieldBytes));
+        List<Byte> fieldBytes = objectToBytes(message, field);
+        result.addAll(listLengthToBytes(fieldBytes));
         result.addAll(fieldBytes);
 
         return result;
     }
-
-    private static List<Byte> getBytesFromInteger(Object message, Field field) {
-        return null;
-    }
-
-    private static List<Byte> getBytesFromString(Object message, Field field)
-            throws IllegalAccessException {
-        String fieldValue = (String) field.get(message);
-        return stringBytes(fieldValue);
-    }
-
-
 
 }
