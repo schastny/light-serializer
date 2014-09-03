@@ -28,15 +28,8 @@ public class LightSerializerReader {
         while (b != CLASS_END) {
             String fieldName = getMetaString(bytesSequence, FIELD_DELIMITER);
             String fieldType = getMetaString(bytesSequence, FIELD_DELIMITER);
-            int lenght = ByteBuffer
-                    .wrap(new byte[]{bytesSequence.poll(), bytesSequence.poll(), bytesSequence.poll(), bytesSequence.poll()})
-                    .order(ByteOrder.BIG_ENDIAN)
-                    .getInt();
-            List<Byte> dataValue = new ArrayList<>();
-            for (int count = 0; count < lenght; count++) {
-                dataValue.add(bytesSequence.poll());
-            }
-            String fieldValue = new String(byteListToArray(dataValue));
+            byte[] fieldBytes = byteListToArray(getFieldData(bytesSequence));
+            String fieldValue = new String(fieldBytes);
             fields.put(fieldName, fieldValue);
             b = bytesSequence.poll(); //CLASS_END or FIELD_START
         }
@@ -44,6 +37,18 @@ public class LightSerializerReader {
 
         T s = constructObject(messageType, fields);
         return s;
+    }
+
+    private static List<Byte> getFieldData(ArrayDeque<Byte> bytesSequence) {
+        int lenght = ByteBuffer
+                .wrap(new byte[]{bytesSequence.poll(), bytesSequence.poll(), bytesSequence.poll(), bytesSequence.poll()})
+                .order(ByteOrder.BIG_ENDIAN)
+                .getInt();
+        List<Byte> data = new ArrayList<>();
+        for (int count = 0; count < lenght; count++) {
+            data.add(bytesSequence.poll());
+        }
+        return data;
     }
 
     private static String getMetaString(ArrayDeque<Byte> bytesSequence, byte delimiter) {
