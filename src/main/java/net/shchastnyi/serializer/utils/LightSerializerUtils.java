@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static net.shchastnyi.serializer.LightSerializerConstants.TYPE_INTEGER;
-import static net.shchastnyi.serializer.LightSerializerConstants.TYPE_STRING;
+import static net.shchastnyi.serializer.LightSerializerConstants.*;
 
 public class LightSerializerUtils {
 
@@ -62,7 +61,14 @@ public class LightSerializerUtils {
         Object result = fieldBytes;
         switch (fieldType) {
             case TYPE_STRING: result = bytesToString(fieldBytes); break;
+            case TYPE_BYTE: result = bytesToByte(fieldBytes); break;
+            case TYPE_SHORT: result = bytesToShort(fieldBytes); break;
             case TYPE_INTEGER: result = bytesToInteger(fieldBytes); break;
+            case TYPE_LONG: result = bytesToLong(fieldBytes); break;
+            case TYPE_FLOAT: result = bytesToFloat(fieldBytes); break;
+            case TYPE_DOUBLE: result = bytesToDouble(fieldBytes); break;
+            case TYPE_BOOLEAN: result = bytesToBoolean(fieldBytes); break;
+            case TYPE_CHARACTER: result = bytesToCharacter(fieldBytes); break;
         }
         return result;
     }
@@ -71,11 +77,36 @@ public class LightSerializerUtils {
         return new String(fieldBytes);
     }
 
+    public static Byte bytesToByte(byte[] fieldBytes) {
+        return ByteBuffer.wrap(fieldBytes).order(ByteOrder.BIG_ENDIAN).get();
+    }
+
+    public static Short bytesToShort(byte[] fieldBytes) {
+        return ByteBuffer.wrap(fieldBytes).order(ByteOrder.BIG_ENDIAN).getShort();
+    }
+
     public static Integer bytesToInteger(byte[] fieldBytes) {
-        int result = ByteBuffer.wrap(fieldBytes)
-                .order(ByteOrder.BIG_ENDIAN)
-                .getInt();
-        return result;
+        return ByteBuffer.wrap(fieldBytes).order(ByteOrder.BIG_ENDIAN).getInt();
+    }
+
+    public static Long bytesToLong(byte[] fieldBytes) {
+        return ByteBuffer.wrap(fieldBytes).order(ByteOrder.BIG_ENDIAN).getLong();
+    }
+
+    public static Float bytesToFloat(byte[] fieldBytes) {
+        return ByteBuffer.wrap(fieldBytes).order(ByteOrder.BIG_ENDIAN).getFloat();
+    }
+
+    public static Double bytesToDouble(byte[] fieldBytes) {
+        return ByteBuffer.wrap(fieldBytes).order(ByteOrder.BIG_ENDIAN).getDouble();
+    }
+
+    public static Boolean bytesToBoolean(byte[] fieldBytes) {
+        return ByteBuffer.wrap(fieldBytes).order(ByteOrder.BIG_ENDIAN).getShort() != 0;
+    }
+
+    public static Character bytesToCharacter(byte[] fieldBytes) {
+        return ByteBuffer.wrap(fieldBytes).order(ByteOrder.BIG_ENDIAN).getChar();
     }
     //!TO OBJECT
 
@@ -84,7 +115,14 @@ public class LightSerializerUtils {
         List<Byte> fieldBytes = new ArrayList<>();
         switch (field.getType().getCanonicalName()) {
             case TYPE_STRING: fieldBytes.addAll(stringToBytes(message, field)); break;
+            case TYPE_BYTE: fieldBytes.addAll(byteToBytes(message, field)); break;
+            case TYPE_SHORT: fieldBytes.addAll(shortToBytes(message, field)); break;
             case TYPE_INTEGER: fieldBytes.addAll(integerToBytes(message, field)); break;
+            case TYPE_LONG: fieldBytes.addAll(longToBytes(message, field)); break;
+            case TYPE_FLOAT: fieldBytes.addAll(floatToBytes(message, field)); break;
+            case TYPE_DOUBLE: fieldBytes.addAll(doubleToBytes(message, field)); break;
+            case TYPE_BOOLEAN: fieldBytes.addAll(booleanToBytes(message, field)); break;
+            case TYPE_CHARACTER: fieldBytes.addAll(characterToBytes(message, field)); break;
         }
         return fieldBytes;
     }
@@ -94,9 +132,52 @@ public class LightSerializerUtils {
         return stringBytes(fieldValue);
     }
 
+    public static List<Byte> byteToBytes(Object message, Field field) throws IllegalAccessException {
+        Byte fieldValue = (Byte) field.get(message);
+        byte[] byteArray = ByteBuffer.allocate(1).put(fieldValue).array();
+        return byteArrayToList(byteArray);
+    }
+
+    public static List<Byte> shortToBytes(Object message, Field field) throws IllegalAccessException {
+        Short fieldValue = (Short) field.get(message);
+        byte[] byteArray = ByteBuffer.allocate(2).putShort(fieldValue).array();
+        return byteArrayToList(byteArray);
+    }
+
     public static List<Byte> integerToBytes(Object message, Field field) throws IllegalAccessException {
         Integer fieldValue = (Integer) field.get(message);
         byte[] byteArray = ByteBuffer.allocate(4).putInt(fieldValue).array();
+        return byteArrayToList(byteArray);
+    }
+
+    public static List<Byte> longToBytes(Object message, Field field) throws IllegalAccessException {
+        Long fieldValue = (Long) field.get(message);
+        byte[] byteArray = ByteBuffer.allocate(8).putLong(fieldValue).array();
+        return byteArrayToList(byteArray);
+    }
+
+    public static List<Byte> floatToBytes(Object message, Field field) throws IllegalAccessException {
+        Float fieldValue = (Float) field.get(message);
+        byte[] byteArray = ByteBuffer.allocate(4).putFloat(fieldValue).array();
+        return byteArrayToList(byteArray);
+    }
+
+    public static List<Byte> doubleToBytes(Object message, Field field) throws IllegalAccessException {
+        Double fieldValue = (Double) field.get(message);
+        byte[] byteArray = ByteBuffer.allocate(8).putDouble(fieldValue).array();
+        return byteArrayToList(byteArray);
+    }
+
+    public static List<Byte> booleanToBytes(Object message, Field field) throws IllegalAccessException {
+        Boolean fieldValue = (Boolean) field.get(message);
+        byte storingValue = (byte) (fieldValue ? 1 : 0);
+        byte[] byteArray = ByteBuffer.allocate(1).put(storingValue).array();
+        return byteArrayToList(byteArray);
+    }
+
+    public static List<Byte> characterToBytes(Object message, Field field) throws IllegalAccessException {
+        Character fieldValue = (Character) field.get(message);
+        byte[] byteArray = ByteBuffer.allocate(2).putChar(fieldValue).array();
         return byteArrayToList(byteArray);
     }
     //!TO BYTES

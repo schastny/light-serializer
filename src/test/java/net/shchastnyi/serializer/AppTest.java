@@ -1,12 +1,13 @@
 package net.shchastnyi.serializer;
 
 import net.shchastnyi.serializer.messages.Person;
-import org.junit.*;
+import net.shchastnyi.serializer.messages.PersonWithAge;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
 
 public class AppTest {
 
@@ -14,19 +15,24 @@ public class AppTest {
 
     @Test
     public void simpleBeanWithPublicFields() throws Exception {
-        String simpleFile = TMP_DIR +"/serial.ser";
-
         //Writing message
         Person messageSent = new Person("John", "Smith");
         byte[] bytesSent = LightSerializerWriter.serialize(messageSent);
-//        OutputStream os = new FileOutputStream(simpleFile);
-//        os.write(bytesSent);
-//        os.flush();
-//        os.close();
 
         //Reading message
-//        byte[] bytesReceived = Files.readAllBytes(new File(simpleFile).toPath());
         Person messageReceived = LightSerializerReader.deSerialize(bytesSent);
+
+        Assert.assertEquals("Failure - objects are not equal", messageSent, messageReceived);
+    }
+
+    @Test
+    public void testAge() throws Exception {
+        //Writing message
+        PersonWithAge messageSent = new PersonWithAge("John", "Smith", 42);
+        byte[] bytesSent = LightSerializerWriter.serialize(messageSent);
+
+        //Reading message
+        PersonWithAge messageReceived = LightSerializerReader.deSerialize(bytesSent);
 
         Assert.assertEquals("Failure - objects are not equal", messageSent, messageReceived);
     }
