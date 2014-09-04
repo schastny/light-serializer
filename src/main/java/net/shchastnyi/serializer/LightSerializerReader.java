@@ -1,5 +1,7 @@
 package net.shchastnyi.serializer;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -25,11 +27,16 @@ public class LightSerializerReader {
         return s;
     }
 
-    public static Object constructFromNodeArray(Node node) throws ClassNotFoundException {
+    public static Object constructFromNodeArray(Node node) throws Exception {
         String classType = node.type;
         String classTypeTrimmed = classType.substring(0, classType.length() - 2);
         Class<?> clazz = forName(classTypeTrimmed);
-        Object[] s = createArray(clazz, 12);
+        Object[] s = createArray(clazz, node.children.size());
+        for (int i = 0; i < node.children.size(); i++) {
+            Node childNode = node.children.get(i);
+            Object o = constructFromNode(childNode);
+            s[i] = o;
+        }
         return s;
     }
 
@@ -49,10 +56,28 @@ public class LightSerializerReader {
             if ( !Modifier.isStatic(field.getModifiers()) ) {
                 field.setAccessible(true);
                 Object o = constructFromNode(childNode);
-                field.set(s, o);
+
+                Class<?> fieldType = field.getType();
+                String arrayType = fieldType.getCanonicalName().substring(0, fieldType.getCanonicalName().length() - 2);
+                switch ( arrayType ) {
+                    case TYPE_BYTE_P: field.set(s, ArrayUtils.toPrimitive((Byte[])o)); break;
+                    case TYPE_SHORT_P: field.set(s, ArrayUtils.toPrimitive((Short[])o)); break;
+                    case TYPE_INT_P: field.set(s, ArrayUtils.toPrimitive((Integer[])o)); break;
+                    case TYPE_LONG_P: field.set(s, ArrayUtils.toPrimitive((Long[])o)); break;
+                    case TYPE_FLOAT_P: field.set(s, ArrayUtils.toPrimitive((Float[])o)); break;
+                    case TYPE_DOUBLE_P: field.set(s, ArrayUtils.toPrimitive((Double[])o)); break;
+                    case TYPE_BOOLEAN_P: field.set(s, ArrayUtils.toPrimitive((Boolean[])o)); break;
+                    case TYPE_CHAR_P: field.set(s, ArrayUtils.toPrimitive((Character[])o)); break;
+                    default: field.set(s, o); break;
+                }
+//                field.set(s, o);
             }
         }
         return s;
+    }
+
+    public static <T> T foo(Object r) {
+        return null;
     }
 
     public static Class forName(String classType) throws ClassNotFoundException {
