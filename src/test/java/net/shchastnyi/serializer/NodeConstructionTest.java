@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -57,7 +58,20 @@ public class NodeConstructionTest {
         Assert.assertEquals(messageSent, messageReceived);
     }
 
-//    @Test
+    @Test(expected=RuntimeException.class)
+    public void testCyclicNodes() throws Exception {
+        PersonCyclic a = new PersonCyclic();
+        PersonCyclic b = new PersonCyclic();
+        PersonCyclic c = new PersonCyclic();
+
+        c.children.add(a);
+        a.children.add(b);
+        a.children.add(c);
+
+        Node node = NodeConstructor.getNode(a);
+    }
+
+    @Test(expected=RuntimeException.class)
     public void testCyclicAlgorithm() throws Exception {
         PersonCyclic a = new PersonCyclic();
         PersonCyclic b = new PersonCyclic();
@@ -67,10 +81,8 @@ public class NodeConstructionTest {
         a.children.add(b);
         a.children.add(c);
 
-//        Set<PersonCyclic> stack = new HashSet<>();
-//        checkRecAlgorithm(a, stack);
-
-        Node node = NodeConstructor.getNode(a);
+        Set<PersonCyclic> stack = new HashSet<>();
+        checkRecAlgorithm(a, stack);
     }
 
     private void checkRecAlgorithm(PersonCyclic node, Set<PersonCyclic> stack) {
