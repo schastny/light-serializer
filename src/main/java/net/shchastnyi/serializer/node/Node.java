@@ -31,4 +31,29 @@ public class Node {
     public String toString() {
         return name +": "+ type +(children.isEmpty()?"":" ("+children.size()+")");
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Node node = (Node) o;
+
+        if (children != null ? !children.equals(node.children) : node.children != null) return false;
+        if (data != null ? !data.equals(node.data) : node.data != null) return false;
+        if (name != null ? !name.equals(node.name) : node.name != null) return false;
+        if (type != null ? !type.equals(node.type) : node.type != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (children != null ? children.hashCode() : 0);
+        result = 31 * result + (data != null ? data.hashCode() : 0);
+        return result;
+    }
+
 }

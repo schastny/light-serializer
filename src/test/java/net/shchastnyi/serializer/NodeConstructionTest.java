@@ -3,6 +3,7 @@ package net.shchastnyi.serializer;
 import net.shchastnyi.serializer.messages.AllWrappersInOne;
 import net.shchastnyi.serializer.messages.Group;
 import net.shchastnyi.serializer.messages.Person;
+import net.shchastnyi.serializer.messages.PersonCyclic;
 import net.shchastnyi.serializer.node.Node;
 import net.shchastnyi.serializer.node.NodeConstructor;
 import net.shchastnyi.serializer.node.NodeDecoder;
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class NodeConstructionTest {
 
@@ -53,6 +55,33 @@ public class NodeConstructionTest {
         Group messageReceived = (Group) NodeDecoder.constructFromNode(node);
 
         Assert.assertEquals(messageSent, messageReceived);
+    }
+
+//    @Test
+    public void testCyclicAlgorithm() throws Exception {
+        PersonCyclic a = new PersonCyclic();
+        PersonCyclic b = new PersonCyclic();
+        PersonCyclic c = new PersonCyclic();
+
+        c.children.add(a);
+        a.children.add(b);
+        a.children.add(c);
+
+//        Set<PersonCyclic> stack = new HashSet<>();
+//        checkRecAlgorithm(a, stack);
+
+        Node node = NodeConstructor.getNode(a);
+    }
+
+    private void checkRecAlgorithm(PersonCyclic node, Set<PersonCyclic> stack) {
+        if ( !stack.add(node) )
+            throw new RuntimeException("Error! Cyclic referencing detected!");
+
+        for (PersonCyclic child: node.children) {
+            checkRecAlgorithm(child, stack);
+        }
+
+        stack.remove(node);
     }
 
 }
