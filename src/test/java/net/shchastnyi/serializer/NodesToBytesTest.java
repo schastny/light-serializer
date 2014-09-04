@@ -11,7 +11,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 
-public class AppTest {
+public class NodesToBytesTest {
 
     private static final String TMP_DIR = "d:/tmp";
 

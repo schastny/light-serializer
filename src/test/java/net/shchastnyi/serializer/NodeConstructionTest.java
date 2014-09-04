@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NodeTest {
+public class NodeConstructionTest {
 
     @Test
     public void testSimpleBeanWithPublicFields() throws Exception {
