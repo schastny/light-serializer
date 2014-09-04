@@ -1,4 +1,4 @@
-package net.shchastnyi.serializer;
+package net.shchastnyi.serializer.node;
 
 import java.util.ArrayList;
 import java.util.List;

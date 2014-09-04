@@ -10,8 +10,6 @@ public class LightSerializerConstants {
     public static final byte FIELD_DELIMITER = 0x05;
 
     //Constants
-//    public static final String TYPE_STRING = "java.lang.String";
-
     public static final String TYPE_BYTE = "java.lang.Byte";
     public static final String TYPE_SHORT = "java.lang.Short";
     public static final String TYPE_INTEGER = "java.lang.Integer";

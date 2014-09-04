@@ -74,10 +74,6 @@ public class LightSerializerUtils {
         return result;
     }
 
-    public static String bytesToString(byte[] fieldBytes) {
-        return new String(fieldBytes);
-    }
-
     public static Byte bytesToByte(byte[] fieldBytes) {
         return ByteBuffer.wrap(fieldBytes).order(ORDER).get();
     }
