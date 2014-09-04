@@ -70,9 +70,8 @@ public class LightSerializerReader {
                     case TYPE_CHAR_P: field.set(s, ArrayUtils.toPrimitive((Character[])o)); break;
                     default: field.set(s, o); break;
                 }
-//                field.set(s, o);
-            }
-        }
+            } //!if
+        } //!for
         return s;
     }
 
@@ -91,6 +90,7 @@ public class LightSerializerReader {
             case TYPE_DOUBLE: case TYPE_DOUBLE_P: clazz = primitiveToWrapper(double.class); break;
             case TYPE_BOOLEAN: case TYPE_BOOLEAN_P: clazz = primitiveToWrapper(boolean.class); break;
             case TYPE_CHARACTER: case TYPE_CHAR_P: clazz = primitiveToWrapper(char.class); break;
+            case "": clazz = null; break;
             default: clazz = Class.forName(classType); break;
         }
         return clazz;
@@ -99,6 +99,9 @@ public class LightSerializerReader {
     public static Object newInstance(Node node) throws Exception {
         String classType = node.type;
         Class<?> clazz = forName(node.type);
+
+        if (clazz == null) return null;
+
         Object s;
         switch ( classType ) {
             case TYPE_BYTE: case TYPE_BYTE_P: s = clazz.getConstructor(byte.class).newInstance(node.data); break;

@@ -31,6 +31,9 @@ public class LightSerializerWriter {
     }
 
     public static Node getNode(String nodeName, Object entity) throws Exception {
+        if (entity == null)
+            return new Node(nodeName, "", "");
+
         String nodeType = entity.getClass().getCanonicalName();
         Node node = Node.node(nodeName, nodeType);
 
@@ -45,32 +48,40 @@ public class LightSerializerWriter {
                 childNode = Node.node(field.getName(), fieldTypeName);
                 Object childArray = field.get(entity);
                 for (int i = 0; i < Array.getLength(childArray); i++) {
-                    String arrayElementType = fieldType.getCanonicalName().substring(0,fieldType.getCanonicalName().length()-2);
+                    String arrayElementType = fieldType.getCanonicalName().substring(0, fieldType.getCanonicalName().length() - 2);
                     Object arrayElement = Array.get(childArray, i);
                     if ( arrayElement != null ) {
                         arrayElementType = arrayElement.getClass().getCanonicalName();
                     }
-                    Node childArrayNode = Node.node("arrayElement", arrayElementType, arrayElement);
+                    Node childArrayNode = writePrimitiveOrObject("arrayElement", arrayElementType, arrayElement);
                     childNode.addChild(childArrayNode);
                 }
             }
             else {
-                switch (fieldTypeName) {
-                    case TYPE_BYTE: case TYPE_BYTE_P:
-                    case TYPE_SHORT: case TYPE_SHORT_P:
-                    case TYPE_INTEGER: case TYPE_INT_P:
-                    case TYPE_LONG: case TYPE_LONG_P:
-                    case TYPE_FLOAT: case TYPE_FLOAT_P:
-                    case TYPE_DOUBLE: case TYPE_DOUBLE_P:
-                    case TYPE_BOOLEAN: case TYPE_BOOLEAN_P:
-                    case TYPE_CHARACTER: case TYPE_CHAR_P:
-                        childNode = Node.node(field.getName(), fieldTypeName, field.get(entity)); break;
-                    default: childNode = getNode(field.getName(), field.get(entity));
-                }
+                Object fieldEntity = field.get(entity);
+                childNode = writePrimitiveOrObject(field.getName(), fieldTypeName, fieldEntity);
             }
             node.addChild(childNode);
         }
         return node;
+    }
+
+    private static Node writePrimitiveOrObject(String fieldName, String fieldTypeName, Object entity) throws Exception {
+        Node childNode;
+        switch (fieldTypeName) {
+            case TYPE_BYTE: case TYPE_BYTE_P:
+            case TYPE_SHORT: case TYPE_SHORT_P:
+            case TYPE_INTEGER: case TYPE_INT_P:
+            case TYPE_LONG: case TYPE_LONG_P:
+            case TYPE_FLOAT: case TYPE_FLOAT_P:
+            case TYPE_DOUBLE: case TYPE_DOUBLE_P:
+            case TYPE_BOOLEAN: case TYPE_BOOLEAN_P:
+            case TYPE_CHARACTER: case TYPE_CHAR_P:
+                childNode = Node.node(fieldName, fieldTypeName, entity); break;
+            default:
+                childNode = getNode(fieldName, entity); break;
+        }
+        return childNode;
     }
 
     public static byte[] serialize(Object message) throws IllegalAccessException {
