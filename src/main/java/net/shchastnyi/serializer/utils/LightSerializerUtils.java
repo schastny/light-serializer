@@ -129,38 +129,43 @@ public class LightSerializerUtils {
     //!TO OBJECT
 
     //TO BYTES
-    public static List<Byte> objectToBytes(Object message, Field field) throws IllegalAccessException {
+    public static List<Byte> objectToBytes(Object entity, Field field) throws IllegalAccessException {
         List<Byte> fieldBytes = new ArrayList<>();
         switch (field.getType().getCanonicalName()) {
-            case TYPE_STRING: fieldBytes.addAll(stringToBytes(message, field)); break;
+            case TYPE_STRING: fieldBytes.addAll(stringToBytes(entity, field)); break;
 
             case TYPE_BYTE:
-            case TYPE_BYTE_P: fieldBytes.addAll(byteToBytes(message, field)); break;
+            case TYPE_BYTE_P: fieldBytes.addAll(byteToBytes(entity, field)); break;
 
             case TYPE_SHORT:
-            case TYPE_SHORT_P: fieldBytes.addAll(shortToBytes(message, field)); break;
+            case TYPE_SHORT_P: fieldBytes.addAll(shortToBytes(entity, field)); break;
 
             case TYPE_INTEGER:
-            case TYPE_INT_P: fieldBytes.addAll(integerToBytes(message, field)); break;
+            case TYPE_INT_P: fieldBytes.addAll(integerToBytes(entity, field)); break;
 
             case TYPE_LONG:
-            case TYPE_LONG_P: fieldBytes.addAll(longToBytes(message, field)); break;
+            case TYPE_LONG_P: fieldBytes.addAll(longToBytes(entity, field)); break;
 
             case TYPE_FLOAT:
-            case TYPE_FLOAT_P: fieldBytes.addAll(floatToBytes(message, field)); break;
+            case TYPE_FLOAT_P: fieldBytes.addAll(floatToBytes(entity, field)); break;
 
             case TYPE_DOUBLE:
-            case TYPE_DOUBLE_P: fieldBytes.addAll(doubleToBytes(message, field)); break;
+            case TYPE_DOUBLE_P: fieldBytes.addAll(doubleToBytes(entity, field)); break;
 
             case TYPE_BOOLEAN:
-            case TYPE_BOOLEAN_P: fieldBytes.addAll(booleanToBytes(message, field)); break;
+            case TYPE_BOOLEAN_P: fieldBytes.addAll(booleanToBytes(entity, field)); break;
 
             case TYPE_CHARACTER:
-            case TYPE_CHAR_P: fieldBytes.addAll(characterToBytes(message, field)); break;
+            case TYPE_CHAR_P: fieldBytes.addAll(characterToBytes(entity, field)); break;
 
-            default: throw new RuntimeException("Can't get wrapper for type: "+field.getType());
+            default: fieldBytes.addAll(referenceToBytes(entity, field));
         }
         return fieldBytes;
+    }
+
+    public static List<Byte> referenceToBytes(Object message, Field field) throws IllegalAccessException {
+        String fieldValue = (String) field.get(message);
+        return objectToBytes(fieldValue, field);
     }
 
     public static List<Byte> stringToBytes(Object message, Field field) throws IllegalAccessException {

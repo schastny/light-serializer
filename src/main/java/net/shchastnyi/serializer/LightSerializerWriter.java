@@ -1,5 +1,6 @@
 package net.shchastnyi.serializer;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,54 @@ import static net.shchastnyi.serializer.utils.LightSerializerUtils.*;
  * <pre/>
  */
 public class LightSerializerWriter {
+
+    public static Node getNode(Object entity) throws Exception {
+        Node root = getNode("root", entity);
+        return root;
+    }
+
+    public static Node getNode(String nodeName, Object entity) throws Exception {
+        String nodeType = entity.getClass().getCanonicalName();
+        Node node = Node.node(nodeName, nodeType);
+
+        Field[] declaredFields = entity.getClass().getDeclaredFields();
+        for (Field field : declaredFields) {
+            field.setAccessible(true);
+            Node childNode;
+            Class<?> fieldType = field.getType();
+
+            if ( fieldType.isArray() ) {
+                childNode = Node.node(field.getName(), fieldType.getCanonicalName());
+                Object childArray = field.get(entity);
+                for (int i = 0; i < Array.getLength(childArray); i++) {
+                    Node childArrayNode = Node.node(
+                            "arrayElement",
+                            fieldType.getCanonicalName().substring(0,fieldType.getCanonicalName().length()-2),
+                            Array.get(childArray, i));
+                    childNode.addChild(childArrayNode);
+                }
+            }
+            else if ( fieldType.isPrimitive() ) {
+                childNode = Node.node(field.getName(), fieldType.getCanonicalName(), field.get(entity));
+            }
+            else {
+                switch (fieldType.getCanonicalName()) {
+                    case TYPE_BYTE: case TYPE_BYTE_P:
+                    case TYPE_SHORT: case TYPE_SHORT_P:
+                    case TYPE_INTEGER: case TYPE_INT_P:
+                    case TYPE_LONG: case TYPE_LONG_P:
+                    case TYPE_FLOAT: case TYPE_FLOAT_P:
+                    case TYPE_DOUBLE: case TYPE_DOUBLE_P:
+                    case TYPE_BOOLEAN: case TYPE_BOOLEAN_P:
+                    case TYPE_CHARACTER: case TYPE_CHAR_P:
+                        childNode = Node.node(field.getName(), fieldType.getCanonicalName(), field.get(entity)); break;
+                    default: childNode = getNode(field.getName(), field.get(entity));
+                }
+            }
+            node.addChild(childNode);
+        }
+        return node;
+    }
 
     public static byte[] serialize(Object message) throws IllegalAccessException {
         List<Byte> result = new ArrayList<>();
