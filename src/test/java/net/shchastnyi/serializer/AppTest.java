@@ -1,16 +1,15 @@
 package net.shchastnyi.serializer;
 
 import net.shchastnyi.serializer.messages.AllWrappersInOne;
-import net.shchastnyi.serializer.messages.Group;
 import net.shchastnyi.serializer.messages.Person;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 
 public class AppTest {
 
@@ -18,11 +17,17 @@ public class AppTest {
 
     @Test
     public void testSimpleBeanWithPublicFields() throws Exception {
+        String fileName = TMP_DIR+"/simple.ser";
         //Writing message
         Person messageSent = new Person("John", "Smith");
         byte[] bytesSent = LightSerializerWriter.serialize(messageSent);
+            OutputStream os = new FileOutputStream(fileName);
+            os.write(bytesSent);
+            os.flush();
+            os.close();
 
         //Reading message
+            byte[] inputBytes = Files.readAllBytes(new File(fileName).toPath());
         Person messageReceived = LightSerializerReader.deSerialize(bytesSent);
 
         Assert.assertEquals("Failure - objects are not equal", messageSent, messageReceived);
@@ -59,24 +64,6 @@ public class AppTest {
 //        Assert.assertEquals("Failure - objects are not equal", messageSent, messageReceived);
 //    }
 
-    @Test
-    public void testNode() throws Exception {
-        List<Person> students = new ArrayList<Person>();
-        students.add(new Person("John", "Smith"));
-        students.add(new Person("Nick", "Long"));
-        students.add(new Person("Dave", "Brown"));
-        Group messageSent = new Group(1, students, new Person("Angela", "Queen"));
-        Node node = LightSerializerWriter.getNode(messageSent);
-
-        Group messageReceived = (Group) LightSerializerReader.constructFromNode(node);
-
-        int[] obj = new int[3];
-        obj[0] = 0;
-        obj[1] = 1;
-        obj[2] = 2;
-//        Node node = LightSerializerWriter.getNode(obj);
-    }
-
     //TODO Inherited fields
     //TODO transient mark
     //TODO BigEndian/LittleEndian
@@ -95,7 +82,7 @@ public class AppTest {
         dir.mkdir();
     }
 
-    @AfterClass
+//    @AfterClass
     public static void clean() {
         File dir = new File(TMP_DIR);
         for (File file : dir.listFiles()) {

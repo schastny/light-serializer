@@ -84,14 +84,16 @@ public class LightSerializerWriter {
         return childNode;
     }
 
-    public static byte[] serialize(Object message) throws IllegalAccessException {
+    public static byte[] serialize(Object message) throws Exception {
+        Node node = LightSerializerWriter.getNode(message);
         List<Byte> result = new ArrayList<>();
+
         result.add(CLASS_START);
-        result.addAll(stringBytes(message.getClass().getCanonicalName()));
+        result.addAll(stringBytes(node.type));
         result.add(CLASS_DELIMITER);
 
-        for (Field field : message.getClass().getDeclaredFields()) {
-            List<Byte> fieldBytes = getFieldBytes(message, field);
+        for (Node childNode : node.children) {
+            List<Byte> fieldBytes = getFieldBytes(childNode);
             result.addAll(fieldBytes);
         }
 
@@ -99,17 +101,17 @@ public class LightSerializerWriter {
         return byteListToArray(result);
     }
 
-    private static List<Byte> getFieldBytes(Object message, Field field) throws IllegalAccessException {
+    private static List<Byte> getFieldBytes(Node node) throws IllegalAccessException {
         List<Byte> result = new ArrayList<>();
 
         result.add(FIELD_START);
-        result.addAll(stringBytes(field.getName()));
+        result.addAll(stringBytes(node.name));
         result.add(FIELD_DELIMITER);
 
-        result.addAll(stringBytes(field.getType().getCanonicalName()));
+        result.addAll(stringBytes(node.type));
         result.add(FIELD_DELIMITER);
 
-        List<Byte> fieldBytes = objectToBytes(message, field);
+        List<Byte> fieldBytes = objectToBytes(node.data, node.type);
         result.addAll(listLengthToBytes(fieldBytes));
         result.addAll(fieldBytes);
 

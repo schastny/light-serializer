@@ -6,6 +6,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         UtilsTest.class,
-        AppTest.class
+        NodeTest.class
+//        AppTest.class
 })
 public class FeatureTestSuite {}
