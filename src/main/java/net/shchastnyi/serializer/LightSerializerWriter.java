@@ -39,23 +39,23 @@ public class LightSerializerWriter {
             field.setAccessible(true);
             Node childNode;
             Class<?> fieldType = field.getType();
+            String fieldTypeName = fieldType.getCanonicalName();
 
             if ( fieldType.isArray() ) {
-                childNode = Node.node(field.getName(), fieldType.getCanonicalName());
+                childNode = Node.node(field.getName(), fieldTypeName);
                 Object childArray = field.get(entity);
                 for (int i = 0; i < Array.getLength(childArray); i++) {
-                    Node childArrayNode = Node.node(
-                            "arrayElement",
-                            fieldType.getCanonicalName().substring(0,fieldType.getCanonicalName().length()-2),
-                            Array.get(childArray, i));
+                    String arrayElementType = fieldType.getCanonicalName().substring(0,fieldType.getCanonicalName().length()-2);
+                    Object arrayElement = Array.get(childArray, i);
+                    if ( arrayElement != null ) {
+                        arrayElementType = arrayElement.getClass().getCanonicalName();
+                    }
+                    Node childArrayNode = Node.node("arrayElement", arrayElementType, arrayElement);
                     childNode.addChild(childArrayNode);
                 }
             }
-            else if ( fieldType.isPrimitive() ) {
-                childNode = Node.node(field.getName(), fieldType.getCanonicalName(), field.get(entity));
-            }
             else {
-                switch (fieldType.getCanonicalName()) {
+                switch (fieldTypeName) {
                     case TYPE_BYTE: case TYPE_BYTE_P:
                     case TYPE_SHORT: case TYPE_SHORT_P:
                     case TYPE_INTEGER: case TYPE_INT_P:
@@ -64,7 +64,7 @@ public class LightSerializerWriter {
                     case TYPE_DOUBLE: case TYPE_DOUBLE_P:
                     case TYPE_BOOLEAN: case TYPE_BOOLEAN_P:
                     case TYPE_CHARACTER: case TYPE_CHAR_P:
-                        childNode = Node.node(field.getName(), fieldType.getCanonicalName(), field.get(entity)); break;
+                        childNode = Node.node(field.getName(), fieldTypeName, field.get(entity)); break;
                     default: childNode = getNode(field.getName(), field.get(entity));
                 }
             }
