@@ -3,10 +3,13 @@ package net.shchastnyi.serializer;
 import net.shchastnyi.serializer.messages.AllWrappersInOne;
 import net.shchastnyi.serializer.messages.Group;
 import net.shchastnyi.serializer.messages.Person;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import java.io.*;
-import java.nio.file.Files;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,21 +18,16 @@ public class NodesToBytesTest {
     private static final String TMP_DIR = "d:/tmp";
     String fileName = TMP_DIR+"/simple.ser";
     private LightSerializerWriter lightSerializerWriter;
+    private LightSerializerReader lightSerializerReader;
 
-    //    @Test
+    @Test
     public void testSimpleBeanWithPublicFields() throws Exception {
         //Writing message
         Person messageSent = new Person("John", "Smith");
-//        byte[] bytesSent = LightSerializerWriter.serialize(messageSent);
-//            OutputStream os = new FileOutputStream(fileName);
-//            os.write(bytesSent);
-//            os.flush();
-//            os.close();
-        String bytesSent = lightSerializerWriter.serializeDebug(messageSent);
+        byte[] bytesSent = lightSerializerWriter.serialize(messageSent);
 
         //Reading message
-            byte[] inputBytes = Files.readAllBytes(new File(fileName).toPath());
-//        Person messageReceived = LightSerializerReader.deSerialize(bytesSent);
+        Person messageReceived = lightSerializerReader.deSerialize(bytesSent);
 
 //        Assert.assertEquals("Failure - objects are not equal", messageSent, messageReceived);
     }
@@ -94,6 +92,7 @@ public class NodesToBytesTest {
     @Before
     public void beforeTest() {
         lightSerializerWriter = new LightSerializerWriter();
+        lightSerializerReader = new LightSerializerReader();
     }
 
 //    @AfterClass

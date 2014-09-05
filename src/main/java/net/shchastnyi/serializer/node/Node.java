@@ -5,12 +5,26 @@ import java.util.List;
 
 public class Node {
 
+    public int id;
     public String name;
     public String type;
     public List<Node> children = new ArrayList<>();
     public Object data;
 
     public Node(String name, String type, Object data) {
+        this.name = name;
+        this.type = type;
+        this.data = data;
+    }
+
+    public Node(int id, String name, String type) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+    }
+
+    public Node(int id, String name, String type, Object data) {
+        this.id = id;
         this.name = name;
         this.type = type;
         this.data = data;

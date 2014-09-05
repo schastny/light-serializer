@@ -93,16 +93,22 @@ public class LightSerializerWriter {
             sbResult.append(child.referenceId);
             sbResultList.add(child.debugString);
         }
+
+        streamResult.writeByte(DELIMITER);
+        sbResult.append(DELIMITER_DEBUG);
         sbResult.append("\n");
     }
 
     private void writeHeader(int referenceId, Node node, DataOutputStream streamResult, StringBuilder sbResult) throws IOException {
         streamResult.writeByte(CLASS_START);
-        streamResult.writeInt(referenceId); streamResult.writeBytes(node.type);
+        streamResult.writeInt(referenceId);
+        streamResult.writeBytes(node.type);
+        streamResult.writeByte(DELIMITER);
         streamResult.writeByte(DELIMITER);
 
         sbResult.append(CLASS_START_DEBUG); sbResult.append("\n");
-        sbResult.append(referenceId); sbResult.append(node.type);
+        sbResult.append(referenceId);
+        sbResult.append(node.type);
         sbResult.append(DELIMITER_DEBUG); sbResult.append("\n");
     }
 
