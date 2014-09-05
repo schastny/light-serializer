@@ -3,6 +3,7 @@ package net.shchastnyi.serializer;
 import net.shchastnyi.serializer.messages.AllWrappersInOne;
 import net.shchastnyi.serializer.messages.Group;
 import net.shchastnyi.serializer.messages.Person;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,7 +17,7 @@ import java.util.List;
 public class NodesToBytesTest {
 
     private static final String TMP_DIR = "d:/tmp";
-    String fileName = TMP_DIR+"/simple.ser";
+    private static final String fileName = TMP_DIR+"/simple.ser";
     private LightSerializerWriter lightSerializerWriter;
     private LightSerializerReader lightSerializerReader;
 
@@ -46,7 +47,7 @@ public class NodesToBytesTest {
 //        Assert.assertEquals("Failure - objects are not equal", messageSent, messageReceived);
     }
 
-    @Test
+//    @Test
     public void testReferences() throws Exception {
         //Writing message
         List<Person> students = new ArrayList<Person>();
@@ -95,7 +96,7 @@ public class NodesToBytesTest {
         lightSerializerReader = new LightSerializerReader();
     }
 
-//    @AfterClass
+    @AfterClass
     public static void clean() {
         File dir = new File(TMP_DIR);
         for (File file : dir.listFiles()) {

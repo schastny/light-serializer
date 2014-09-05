@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class NodeConstructionTest {
 
-//    @Test
+//    @Test //TODO Get it workable
     public void testArray() throws Exception {
         //Writing message
         Character[] messageSent = new Character[]{'a','b','c'};
