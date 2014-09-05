@@ -14,7 +14,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NodesToBytesTest {
+public class BytesTest {
 
     private static final String TMP_DIR = "d:/tmp";
     private static final String fileName = TMP_DIR+"/simple.ser";

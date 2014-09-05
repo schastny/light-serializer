@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class NodeConstructionTest {
+public class NodesTest {
 
 //    @Test //TODO Get it workable
     public void testArray() throws Exception {
