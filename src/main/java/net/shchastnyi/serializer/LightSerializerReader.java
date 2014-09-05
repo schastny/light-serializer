@@ -1,6 +1,7 @@
 package net.shchastnyi.serializer;
 
 import net.shchastnyi.serializer.node.Node;
+import net.shchastnyi.serializer.node.NodeDecoder;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -14,6 +15,17 @@ import static net.shchastnyi.serializer.utils.LightSerializerUtils.byteListToArr
 public class LightSerializerReader {
 
     public <T> T deSerialize(byte[] bytes) throws Exception {
+        List<Node> nodes = getNodesFromBytes(bytes);
+        Node rootNode = constructRootNode(nodes);
+        T result = (T) new NodeDecoder().constructFromNode(rootNode);
+        return result;
+    }
+
+    private Node constructRootNode(List<Node> nodes) {
+        return nodes.get(0);
+    }
+
+    public List<Node> getNodesFromBytes(byte[] bytes) throws Exception {
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         DataInputStream stream = new DataInputStream(bis);
         if (stream.readByte() != CLASS_START) {
@@ -48,8 +60,7 @@ public class LightSerializerReader {
         }
         // !Read fiedls
 
-        T s = constructObject(nodes);
-        return s;
+        return nodes;
     }
 
     private String getToken(DataInputStream stream) throws IOException {
@@ -59,18 +70,6 @@ public class LightSerializerReader {
             chars.add(b);
         }
         return new String(byteListToArray(chars));
-    }
-
-    private <T> T constructObject(List<Node> nodes) throws Exception {
-//        Class<?> clazz = Class.forName(messageTypeString);
-//        T s = (T) clazz.newInstance();
-//        for (String key : fields.keySet()) {
-//            Field field = clazz.getDeclaredField(key);
-//            field.setAccessible(true);
-//            field.set(s, fields.get(key));
-//        }
-//        return s;
-        return null;
     }
 
 }

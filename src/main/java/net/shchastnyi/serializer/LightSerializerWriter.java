@@ -19,11 +19,11 @@ public class LightSerializerWriter {
     private int keyId = 0;
 
     public byte[] serialize(Object message) throws Exception {
-        Node node = NodeConstructor.getNode(message);
+        Node node = new NodeConstructor().getNode(message);
         return byteListToArray(serialize(node).bytes);
     }
     public String serializeDebug(Object message) throws Exception {
-        Node node = NodeConstructor.getNode(message);
+        Node node = new NodeConstructor().getNode(message);
         return serialize(node).debugString.toString();
     }
 

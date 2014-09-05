@@ -9,13 +9,13 @@ import static net.shchastnyi.serializer.LightSerializerConstants.*;
 
 public class NodeConstructor {
 
-    public static Node getNode(Object entity) throws Exception {
+    public Node getNode(Object entity) throws Exception {
         Set<Node> stack = new HashSet<>();
         Node root = getNode("root", entity, stack);
         return root;
     }
 
-    private static Node getNode(String nodeName, Object entity, Set<Node> stack) throws Exception {
+    private Node getNode(String nodeName, Object entity, Set<Node> stack) throws Exception {
         if (entity == null)
             return new Node(nodeName, "", "");
 
@@ -54,7 +54,7 @@ public class NodeConstructor {
         return node;
     }
 
-    private static Node writePrimitiveOrObject(String fieldName, String fieldTypeName, Object entity, Set<Node> stack) throws Exception {
+    private Node writePrimitiveOrObject(String fieldName, String fieldTypeName, Object entity, Set<Node> stack) throws Exception {
         Node childNode;
         switch (fieldTypeName) {
             case TYPE_BYTE: case TYPE_BYTE_P:

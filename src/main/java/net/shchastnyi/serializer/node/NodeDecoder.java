@@ -12,7 +12,7 @@ import static org.apache.commons.lang.ClassUtils.primitiveToWrapper;
 
 public class NodeDecoder {
 
-    public static Object constructFromNode(Node node) throws Exception {
+    public Object constructFromNode(Node node) throws Exception {
         String classType = node.type;
         Object s;
         if ( classType.endsWith("[]") ) {
@@ -23,7 +23,7 @@ public class NodeDecoder {
         return s;
     }
 
-    public static Object constructFromNodeArray(Node node) throws Exception {
+    public Object constructFromNodeArray(Node node) throws Exception {
         String classType = node.type;
         String classTypeTrimmed = classType.substring(0, classType.length() - 2);
         Class<?> clazz = forName(classTypeTrimmed);
@@ -36,14 +36,14 @@ public class NodeDecoder {
         return s;
     }
 
-    public static <E> E[] createArray(Class<E> c, int length) {
+    public <E> E[] createArray(Class<E> c, int length) {
         // Use Array native method to create array of a type only known at run time
         @SuppressWarnings("unchecked")
         final E[] a = (E[]) Array.newInstance(c, length);
         return a;
     }
 
-    public static Object constructFromNodeObject(Node node) throws Exception {
+    public Object constructFromNodeObject(Node node) throws Exception {
         String classType = node.type;
         Class<?> clazz = forName(classType);
         Object s = newInstance(node);
@@ -88,7 +88,7 @@ public class NodeDecoder {
         return clazz;
     }
 
-    public static Object newInstance(Node node) throws Exception {
+    public Object newInstance(Node node) throws Exception {
         String classType = node.type;
         Class<?> clazz = forName(node.type);
 

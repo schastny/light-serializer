@@ -8,93 +8,89 @@ import net.shchastnyi.serializer.node.Node;
 import net.shchastnyi.serializer.node.NodeConstructor;
 import net.shchastnyi.serializer.node.NodeDecoder;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+
+import static net.shchastnyi.serializer.SerializationTestSuite.*;
 
 public class NodesTest {
 
-//    @Test //TODO Get it workable
+    private NodeConstructor nodeConstructor;
+    private NodeDecoder nodeDecoder;
+
+    @Before
+    public void beforeTest() {
+        nodeConstructor = new NodeConstructor();
+        nodeDecoder = new NodeDecoder();
+    }
+
+    //TODO Get it workable
+    //@Test
     public void testArray() throws Exception {
         //Writing message
-        Character[] messageSent = new Character[]{'a','b','c'};
-        Node nodeSent = NodeConstructor.getNode(messageSent);
+        Character[] messageSent = getCharactersArray();
+        Node nodeSent = nodeConstructor.getNode(messageSent);
 
         //Reading message
-        Character[] messageReceived = (Character[]) NodeDecoder.constructFromNode(nodeSent);
-
+        Character[] messageReceived = (Character[]) nodeDecoder.constructFromNode(nodeSent);
         Assert.assertArrayEquals("Failure - objects are not equal", messageSent, messageReceived);
     }
 
     @Test
-    public void testSimpleBeanWithPublicFields() throws Exception {
+    public void testPerson() throws Exception {
         //Writing message
-        Person messageSent = new Person("John", "Smith");
-        Node nodeSent = NodeConstructor.getNode(messageSent);
+        Person messageSent = getPerson();
+        Node nodeSent = nodeConstructor.getNode(messageSent);
 
         //Reading message
-        Person messageReceived = (Person) NodeDecoder.constructFromNode(nodeSent);
-
-        Assert.assertEquals("Failure - objects are not equal", messageSent, messageReceived);
-    }
-
-    @Test
-    public void testWrappers() throws Exception {
-        //Writing message
-        AllWrappersInOne messageSent = new AllWrappersInOne(
-                (byte)1, (short)2, 3, 4,
-                12f, 13d, 'c', true);
-        Node nodeSent = NodeConstructor.getNode(messageSent);
-
-        //Reading message
-        AllWrappersInOne messageReceived = (AllWrappersInOne) NodeDecoder.constructFromNode(nodeSent);
-
-        Assert.assertEquals("Failure - objects are not equal", messageSent, messageReceived);
-    }
-
-    @Test
-    public void testComplexNode() throws Exception {
-        List<Person> students = new ArrayList<Person>();
-        students.add(new Person("John", "Smith"));
-        students.add(new Person("Nick", "Long"));
-        students.add(new Person("Dave", "Brown"));
-        Group messageSent = new Group(1, students, new Person("Angela", "Queen"));
-
-        Node node = NodeConstructor.getNode(messageSent);
-
-        Group messageReceived = (Group) NodeDecoder.constructFromNode(node);
-
+        Person messageReceived = (Person) nodeDecoder.constructFromNode(nodeSent);
         Assert.assertEquals(messageSent, messageReceived);
     }
 
-    @Test(expected=RuntimeException.class)
-    public void testCyclicNodes() throws Exception {
-        PersonCyclic a = new PersonCyclic();
-        PersonCyclic b = new PersonCyclic();
-        PersonCyclic c = new PersonCyclic();
+    @Test
+    public void testAllWrappersInOne() throws Exception {
+        //Writing message
+        AllWrappersInOne messageSent = getAllWrappersInOne();
+        Node nodeSent = nodeConstructor.getNode(messageSent);
 
-        c.children.add(a);
-        a.children.add(b);
-        a.children.add(c);
-
-        Node node = NodeConstructor.getNode(a);
+        //Reading message
+        AllWrappersInOne messageReceived = (AllWrappersInOne) nodeDecoder.constructFromNode(nodeSent);
+        Assert.assertEquals(messageSent, messageReceived);
     }
 
+    @Test
+    public void testGroup() throws Exception {
+        //Writing message
+        Group messageSent = getGroup();
+        Node node = nodeConstructor.getNode(messageSent);
+
+        //Reading message
+        Group messageReceived = (Group) nodeDecoder.constructFromNode(node);
+        Assert.assertEquals(messageSent, messageReceived);
+    }
+
+    /**
+     * An exception should be thrown
+     * @throws Exception
+     */
+    @Test(expected=RuntimeException.class)
+    public void testPersonCyclic() throws Exception {
+        PersonCyclic a = getPersonCyclic();
+        nodeConstructor.getNode(a);
+    }
+
+    /**
+     * Just to show the idea<br/>
+     * An exception should be thrown
+     * @throws Exception
+     */
     @Test(expected=RuntimeException.class)
     public void testCyclicAlgorithm() throws Exception {
-        PersonCyclic a = new PersonCyclic();
-        PersonCyclic b = new PersonCyclic();
-        PersonCyclic c = new PersonCyclic();
-
-        c.children.add(a);
-        a.children.add(b);
-        a.children.add(c);
-
-        Set<PersonCyclic> stack = new HashSet<>();
-        checkRecAlgorithm(a, stack);
+        PersonCyclic a = getPersonCyclic();
+        checkRecAlgorithm(a, new HashSet<PersonCyclic>());
     }
 
     private void checkRecAlgorithm(PersonCyclic node, Set<PersonCyclic> stack) {
