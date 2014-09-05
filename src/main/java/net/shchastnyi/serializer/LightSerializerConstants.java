@@ -3,11 +3,12 @@ package net.shchastnyi.serializer;
 public class LightSerializerConstants {
 
     public static final byte CLASS_START = 0x01;
-    public static final byte CLASS_DELIMITER = 0x02;
+    public static final byte DELIMITER = 0x02;
     public static final byte CLASS_END = 0x03;
 
-    public static final byte FIELD_START = 0x04;
-    public static final byte FIELD_DELIMITER = 0x05;
+    public static final String CLASS_START_DEBUG = "CLASS_START_DEBUG";
+    public static final String DELIMITER_DEBUG = ":";
+    public static final String CLASS_END_DEBUG = "CLASS_END_DEBUG";
 
     //Constants
     public static final String TYPE_BYTE = "java.lang.Byte";

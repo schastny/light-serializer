@@ -40,7 +40,7 @@ public class LightSerializerUtils {
      * @param str
      * @return
      */
-    public static List<Byte> stringBytes(String str) {
+    public static List<Byte> stringToBytes(String str) {
         return byteArrayToList(str.getBytes());
     }
 
@@ -108,7 +108,7 @@ public class LightSerializerUtils {
     //!TO OBJECT
 
     //TO BYTES
-    public static List<Byte> objectToBytes(Object entity, String type) throws IllegalAccessException {
+    public static byte[] primitiveToBytes(Object entity, String type) throws IllegalAccessException {
         List<Byte> fieldBytes = new ArrayList<>();
         switch (type) {
             case TYPE_BYTE: case TYPE_BYTE_P: fieldBytes.addAll(byteToBytes((Byte) entity)); break;
@@ -119,18 +119,13 @@ public class LightSerializerUtils {
             case TYPE_DOUBLE: case TYPE_DOUBLE_P: fieldBytes.addAll(doubleToBytes((Double) entity)); break;
             case TYPE_BOOLEAN: case TYPE_BOOLEAN_P: fieldBytes.addAll(booleanToBytes((Boolean) entity)); break;
             case TYPE_CHARACTER: case TYPE_CHAR_P: fieldBytes.addAll(characterToBytes((Character) entity)); break;
-//            default: fieldBytes.addAll(referenceToBytes(entity));
         }
-        return fieldBytes;
+        return byteListToArray(fieldBytes);
     }
 
 //    public static List<Byte> referenceToBytes(Object fieldValue){
-//        return objectToBytes(fieldValue);
+//        return primitiveToBytes(fieldValue);
 //    }
-
-    public static List<Byte> stringToBytes(String fieldValue){
-        return stringBytes(fieldValue);
-    }
 
     public static List<Byte> byteToBytes(Byte fieldValue){
         byte[] byteArray = ByteBuffer.allocate(1).put(fieldValue).array();

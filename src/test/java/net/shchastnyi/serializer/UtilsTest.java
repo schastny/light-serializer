@@ -28,7 +28,7 @@ public class UtilsTest {
     public void testStringBytes() {
         final String sampleString = "Test";
 
-        List<Byte> bytes = LightSerializerUtils.stringBytes(sampleString);
+        List<Byte> bytes = LightSerializerUtils.stringToBytes(sampleString);
         byte[] sample = LightSerializerUtils.byteListToArray(bytes);
         String targetString = new String(sample);
 

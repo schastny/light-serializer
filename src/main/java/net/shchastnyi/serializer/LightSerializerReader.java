@@ -11,6 +11,7 @@ import static net.shchastnyi.serializer.utils.LightSerializerUtils.*;
 
 public class LightSerializerReader {
 
+//    public static <T> T deSerialize(byte[] bytes)
     public static <T> T deSerialize(byte[] bytes)
             throws ClassNotFoundException, NoSuchFieldException, InstantiationException, IllegalAccessException, IOException {
         ArrayDeque<Byte> bytesSequence = new ArrayDeque<>(byteArrayToList(bytes));
@@ -19,27 +20,28 @@ public class LightSerializerReader {
         }
 
         // Read entityType
-        String messageType = getMetaString(bytesSequence, CLASS_DELIMITER);
+//        String messageType = getMetaString(bytesSequence, DELIMITER_DEBUG);
 
         // Read fiedls
         Map<String, Object> fields = new HashMap<>();
         Map<String, Object> fieldTypes = new HashMap<>();
         Byte b = bytesSequence.poll(); //CLASS end or something else
-        while (b != CLASS_END) {
-            String fieldName = getMetaString(bytesSequence, FIELD_DELIMITER);
-            String fieldType = getMetaString(bytesSequence, FIELD_DELIMITER);
-            byte[] fieldBytes = byteListToArray(getFieldBytes(bytesSequence));
-            Object fieldValue = bytesToObject(fieldBytes, fieldType);
-
-            fields.put(fieldName, fieldValue);
-            fieldTypes.put(fieldName, fieldType);
-
-            b = bytesSequence.poll(); //CLASS_END or FIELD_START
-        }
+//        while (b != CLASS_END_DEBUG) {
+//            String fieldName = getMetaString(bytesSequence, FIELD_DELIMITER);
+//            String fieldType = getMetaString(bytesSequence, FIELD_DELIMITER);
+//            byte[] fieldBytes = byteListToArray(getFieldBytes(bytesSequence));
+//            Object fieldValue = bytesToObject(fieldBytes, fieldType);
+//
+//            fields.put(fieldName, fieldValue);
+//            fieldTypes.put(fieldName, fieldType);
+//
+//            b = bytesSequence.poll(); //CLASS_END_DEBUG or FIELD_START
+//        }
         // !Read fiedls
 
-        T s = constructObject(messageType, fields, fieldTypes);
-        return s;
+//        T s = constructObject(messageType, fields, fieldTypes);
+//        return s;
+        return null;
     }
 
     private static List<Byte> getFieldBytes(ArrayDeque<Byte> bytesSequence) {

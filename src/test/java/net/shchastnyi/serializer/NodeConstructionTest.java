@@ -17,6 +17,18 @@ import java.util.Set;
 
 public class NodeConstructionTest {
 
+//    @Test
+    public void testArray() throws Exception {
+        //Writing message
+        Character[] messageSent = new Character[]{'a','b','c'};
+        Node nodeSent = NodeConstructor.getNode(messageSent);
+
+        //Reading message
+        Character[] messageReceived = (Character[]) NodeDecoder.constructFromNode(nodeSent);
+
+        Assert.assertArrayEquals("Failure - objects are not equal", messageSent, messageReceived);
+    }
+
     @Test
     public void testSimpleBeanWithPublicFields() throws Exception {
         //Writing message
