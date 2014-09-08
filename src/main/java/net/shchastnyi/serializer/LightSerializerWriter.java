@@ -20,7 +20,8 @@ public class LightSerializerWriter {
 
     public byte[] serialize(Object message) throws Exception {
         Node node = new NodeConstructor().getNode(message);
-        return byteListToArray(serialize(node).bytes);
+        SerializedNode res = serialize(node);
+        return byteListToArray(res.bytes);
     }
     public String serializeDebug(Object message) throws Exception {
         Node node = new NodeConstructor().getNode(message);
@@ -44,6 +45,7 @@ public class LightSerializerWriter {
         streamResultList.add(stream);
         sbResultList.add(sbResult);
 
+        Collections.reverse(streamResultList);
         Collections.reverse(sbResultList);
         return new SerializedNode(referenceId, flattenStream(streamResultList), flatten(sbResultList));
     }

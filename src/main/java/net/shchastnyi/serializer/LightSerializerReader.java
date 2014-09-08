@@ -39,9 +39,12 @@ public class LightSerializerReader {
         nodes.add(new Node(refId, "root", type));
 
         // Read fiedls
-        byte b;
-        while ((b = stream.readByte()) != CLASS_END) { //CLASS_END or DELIMITER
+        byte b = stream.readByte();
+        while (b != CLASS_END) { //CLASS_END or DELIMITER
             String fieldName = getToken(stream);
+            if ( fieldName == null ) {
+                continue; //This is an end of a file
+            }
             String fieldType = getToken(stream);
             Object fieldValue = null;
             int fieldRefId = 0;
@@ -57,6 +60,7 @@ public class LightSerializerReader {
                 default: fieldRefId = stream.readInt(); break;
             }
             nodes.add(new Node(fieldRefId, fieldName, fieldType, fieldValue));
+            b = stream.readByte();
         }
         // !Read fiedls
 
@@ -64,9 +68,13 @@ public class LightSerializerReader {
     }
 
     private String getToken(DataInputStream stream) throws IOException {
+
         List<Byte> chars = new ArrayList<>();
         byte b;
         while ( (b = stream.readByte()) != DELIMITER ) {
+            if ( b == CLASS_END ) {
+                return null; //This is an end of file
+            }
             chars.add(b);
         }
         return new String(byteListToArray(chars));
