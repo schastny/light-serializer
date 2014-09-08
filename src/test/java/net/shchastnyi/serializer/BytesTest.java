@@ -49,7 +49,7 @@ public class BytesTest {
         Assert.assertEquals(messageSent, messageReceived);
     }
 
-//    @Test
+    @Test
     public void testAllWrappersInOne() throws Exception {
         //Writing message
         AllWrappersInOne messageSent = getAllWrappersInOne();
@@ -60,7 +60,7 @@ public class BytesTest {
         Assert.assertEquals(messageSent, messageReceived);
     }
 
-    //    @Test
+    @Test
     public void testGroup() throws Exception {
         //Writing message
         Group messageSent = getGroup();

@@ -13,8 +13,8 @@ import java.util.List;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         UtilsTest.class,
-        NodesTest.class
-//        BytesTest.class
+        NodesTest.class,
+        BytesTest.class
 })
 public class SerializationTestSuite {
 

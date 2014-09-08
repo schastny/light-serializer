@@ -106,7 +106,6 @@ public class LightSerializerWriter {
         streamResult.writeInt(referenceId);
         streamResult.writeBytes(node.type);
         streamResult.writeByte(DELIMITER);
-        streamResult.writeByte(DELIMITER);
 
         sbResult.append(CLASS_START_DEBUG); sbResult.append("\n");
         sbResult.append(referenceId);
@@ -115,7 +114,9 @@ public class LightSerializerWriter {
     }
 
     private void writeFooter(DataOutputStream streamResult, StringBuilder sbResult) throws IOException {
+        streamResult.writeByte(FIELD_END);
         streamResult.writeByte(CLASS_END);
+        sbResult.append(FIELD_END_DEBUG);;
         sbResult.append(CLASS_END_DEBUG); sbResult.append("\n");
     }
 
